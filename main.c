@@ -2,24 +2,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
-
+#include "main.h"
 typedef struct Musica {
-    char artista[100];
+    char cantor[100];
     char nome[100];
     struct Musica *prev;
     struct Musica *next;
 } Musica;
 
-Musica* criarNo(char* artista, char* nome) {
+Musica* criarNo(char* cantor, char* nome) {
     Musica* novoNo = (Musica*)malloc(sizeof(Musica));
-    strcpy(novoNo->artista, artista);
+    strcpy(novoNo->cantor, cantor);
     strcpy(novoNo->nome, nome);
     novoNo->prev = novoNo->next = novoNo;
     return novoNo;
 }
 
-void inserirNo(Musica** head, char* artista, char* nome) {
-    Musica* novoNo = criarNo(artista, nome);
+void inserirNo(Musica** head, char* cantor, char* nome) {
+    Musica* novoNo = criarNo(cantor, nome);
     if (*head == NULL) {
         *head = novoNo;
     } else {
@@ -40,7 +40,7 @@ void salvarArquivo(Musica* head, const char* musicas) {
     if (!head) return;
     Musica* atual = head;
     do {
-        fprintf(file, "%s;%s\n", atual->artista, atual->nome);
+        fprintf(file, "%s;%s\n", atual->cantor, atual->nome);
         atual = atual->next;
     } while (atual != head);
     fclose(file);
@@ -54,10 +54,10 @@ void carregarArquivo(Musica** head, const char* musicas) {
     }
     char linha[256];
     while (fgets(linha, sizeof(linha), file)) {
-        char* artista = strtok(linha, ";");
+        char* cantor = strtok(linha, ";");
         char* nome = strtok(NULL, "\n");
-        if (artista && nome) {
-            inserirNo(head, artista, nome);
+        if (cantor && nome) {
+            inserirNo(head, cantor, nome);
         }
     }
     fclose(file);
@@ -67,7 +67,7 @@ void exibirPlaylist(Musica* head) {
     if (!head) return;
     Musica* atual = head;
     do {
-        printf("Artista: %s, Música: %s\n", atual->artista, atual->nome);
+        printf("Artista: %s, Música: %s\n", atual->cantor, atual->nome);
         atual = atual->next;
     } while (atual != head);
 }
@@ -98,20 +98,20 @@ void exibirPlaylistOrdenada(Musica* head) {
         }
     }
     for (int i = 0; i < count; i++) {
-        printf("Artista: %s, Música: %s\n", array[i]->artista, array[i]->nome);
+        printf("Artista: %s, Música: %s\n", array[i]->cantor, array[i]->nome);
     }
 
     free(array);
 }
 
 void inserirNovaMusica(Musica** head) {
-    char artista[100];
+    char cantor[100];
     char nome[100];
-    printf("Digite o nome do artista: ");
-    scanf("%s", artista);
+    printf("Digite o nome do cantor: ");
+    scanf("%s", cantor);
     printf("Digite o nome da música: ");
     scanf("%s", nome);
-    inserirNo(head, artista, nome);
+    inserirNo(head, cantor, nome);
     salvarArquivo(*head, "musicas.txt");
 }
 
@@ -149,7 +149,7 @@ void buscarMusica(Musica* head) {
     Musica* atual = head;
     do {
         if (strcmp(atual->nome, nome) == 0) {
-            printf("Artista: %s, Música: %s\n", atual->artista, atual->nome);
+            printf("Artista: %s, Música: %s\n", atual->cantor, atual->nome);
             return;
         }
         atual = atual->next;
@@ -160,18 +160,14 @@ void buscarMusica(Musica* head) {
 void avancarMusica(Musica** atual) {
     if (*atual) {
         *atual = (*atual)->next;
-        printf("=======================================");
-        printf("\nTocando agora: Artista: %s\n Música: %s\n", (*atual)->artista, (*atual)->nome);
-        printf("=======================================");
+        printf("Tocando agora: Artista: %s, Música: %s\n", (*atual)->cantor, (*atual)->nome);
     }
 }
 
 void retornarMusica(Musica** atual) {
     if (*atual) {
         *atual = (*atual)->prev;
-        printf("=======================================");
-        printf("\nTocando agora: Artista: %s\n Música: %s\n", (*atual)->artista, (*atual)->nome);
-        printf("=======================================");
+        printf("Tocando agora: Artista: %s, Música: %s\n", (*atual)->cantor, (*atual)->nome);
     }
 }
 
