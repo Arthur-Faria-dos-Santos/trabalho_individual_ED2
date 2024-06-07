@@ -1,7 +1,5 @@
                             Gerenciador de Playlist de Músicas
 
-Este é um programa em C que gerencia uma playlist de músicas utilizando uma lista duplamente encadeada circular.
-
 
                 Funcionalidades
 
